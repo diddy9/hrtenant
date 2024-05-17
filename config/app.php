@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Laravel'),
+    'name' => env('APP_NAME', 'Onecoy'),
 
     /*
     |--------------------------------------------------------------------------
@@ -51,6 +51,8 @@ return [
     | your application so that it is used when running Artisan tasks.
     |
     */
+
+    'url_base' => env('APP_URL_BASE', 'http://localhost'),
 
     'url' => env('APP_URL', 'http://localhost'),
 
