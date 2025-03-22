@@ -52,6 +52,13 @@ Route::group(['middleware' => ['cors', 'tenant.exists','auth:sanctum']], functio
     Route::get('/manager/show', [App\Http\Controllers\ConfigurationsController::class, 'role_show']);
     Route::delete('manager/delete/{id}', [App\Http\Controllers\ConfigurationsController::class, 'role_delete']);
 
+    //Usermanagement module
+    Route::post('/user/create', [App\Http\Controllers\UserController::class, 'createUser']);
+    Route::get('/user/all', [App\Http\Controllers\UserController::class, 'getAllUsers']);
+    Route::get('/user/{slug}', [App\Http\Controllers\UserController::class, 'index']);
+    Route::delete('/user/delete/{id}', [App\Http\Controllers\UserController::class, 'deleteUser']);
+    Route::put('/user/update/{id}', [App\Http\Controllers\UserController::class, 'editUser']);
+
 
     //Tenant detail for logged in user
     Route::get('/tenant/view/{id}', [App\Http\Controllers\HostnameController::class, 'view']);

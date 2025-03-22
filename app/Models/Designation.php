@@ -13,6 +13,11 @@ class Designation extends Model
 
     protected $fillable = ['name', 'tenant_id'];
 
+    public function users()
+    {
+        return $this->hasMany(User::class, 'designation_id');
+    }
+
     protected static function booted()
     {
         static::addGlobalScope(new TenantScope); 

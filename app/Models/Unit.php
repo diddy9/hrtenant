@@ -18,6 +18,11 @@ class Unit extends Model
         return $this->belongsTo(Department::class);
     }
 
+    public function users()
+    {
+        return $this->hasMany(User::class, 'unit_id');
+    }
+
     protected static function booted()
     {
         static::addGlobalScope(new TenantScope); 

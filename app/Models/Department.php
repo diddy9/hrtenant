@@ -18,6 +18,11 @@ class Department extends Model
         return $this->hasMany(Unit::class);
     }
 
+    public function users()
+    {
+        return $this->hasMany(User::class, 'department_id');
+    }
+
     protected static function booted()
     {
         static::addGlobalScope(new TenantScope); 
