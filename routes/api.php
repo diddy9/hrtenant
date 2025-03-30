@@ -65,10 +65,25 @@ Route::group(['middleware' => ['cors', 'tenant.exists','auth:sanctum']], functio
     Route::post('/tenant/logout', [App\Http\Controllers\HostnameController::class, 'logout']);
 });
 
-Route::middleware(['auth:sanctum', 'module.access:Leave Management'])->group(function () {
-    Route::get('/leave', [LeaveController::class, 'index']);    // View Leaves
-    Route::post('/leave', [LeaveController::class, 'store']);   // Add Leave
-    Route::put('/leave/{id}', [LeaveController::class, 'update']); // Edit Leave
+Route::prefix('leave')->middleware(['cors','auth:sanctum', 'module.access:Leave Management'])->group(function () {
+    //Leave Categories
+    Route::get('/categories', [App\Http\Controllers\LeaveController::class, 'getCategories']);    
+    Route::post('/categories', [App\Http\Controllers\LeaveController::class, 'storeCategory']);   
+    Route::put('/categories/{id}', [App\Http\Controllers\LeaveController::class, 'updateCategory']); 
+    Route::delete('/categories/{id}', [App\Http\Controllers\LeaveController::class, 'deleteCategory']); 
+
+    //Leave Applications
+    Route::get('/applications', [App\Http\Controllers\LeaveController::class, 'getApplications']);
+    Route::post('/apply', [App\Http\Controllers\LeaveController::class, 'apply']);
+    Route::get('/applications/{id}/status', [App\Http\Controllers\LeaveController::class, 'getStatus']);
+    Route::post('/applications/{id}/accept', [App\Http\Controllers\LeaveController::class, 'acceptLeave']);
+    Route::post('/applications/{id}/reject', [App\Http\Controllers\LeaveController::class, 'rejectLeave']);
+
+    // Financial Year Management
+    Route::get('/financial-years', [App\Http\Controllers\LeaveController::class, 'getFinancialYears']);
+    Route::post('/financial-years', [App\Http\Controllers\LeaveController::class, 'storeFinancialYear']);
+    Route::put('/financial-years/{id}', [App\Http\Controllers\LeaveController::class, 'updateFinancialYear']);
+    Route::delete('/financial-years/{id}', [App\Http\Controllers\LeaveController::class, 'deleteFinancialYear']);
 });
 
 Route::fallback(function () {

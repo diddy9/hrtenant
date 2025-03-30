@@ -272,7 +272,7 @@ class ConfigurationsController extends Controller
             return response()->json(['message' => 'Unauthorized. Admin or Manager access required.'], 403);
         }
 
-        $userRoles = UserRole::with(['role:id,name', 'user:id,name,email'])
+        $userRoles = UserRole::with(['role:id,name', 'user:id,f_name,l_name,email'])
         ->get();
 
         return response()->json(['message' => 'Roles with assigned users retrieved successfully.', 'data' => $userRoles]);

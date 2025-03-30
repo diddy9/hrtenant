@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Models\TenantModule; // Import the TenantModule model
 use App\Models\Hostname;     // Import the Hostname model
 
-class CheckModuleAcess
+class CheckModuleAccess
 {
     /**
      * Handle an incoming request.
