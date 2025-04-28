@@ -18,6 +18,7 @@ class CreateFinancialYearsTable extends Migration
             $table->unsignedBigInteger('tenant_id');
             $table->string('start_date'); // Format: MM-DD
             $table->string('end_date');   // Format: MM-DD
+            $table->decimal('carryover_percentage', 5, 2)->default(10); // default 10%
             $table->softDeletes(); // Soft delete
             $table->timestamps();
 

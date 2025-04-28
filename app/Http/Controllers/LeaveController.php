@@ -200,7 +200,7 @@ class LeaveController extends Controller
     private function getRemainingLeaveDays($categoryId) {
         $leaveTaken = Leave_Application::where('user_id', auth()->user()->id)
             ->where('category_id', $categoryId)
-            ->where('status', 'APPROVED')
+            ->where('status', 'GRANTED')
             ->sum('days');
 
         $totalDays = Leave_Category::where('id', $categoryId)->value('days');
@@ -217,13 +217,22 @@ class LeaveController extends Controller
     public function storeFinancialYear(Request $req) {
         $validatedData = $req->validate([
             'start_date' => ['required'],
-            'end_date' => ['required']
+            'end_date' => ['required'],
+            'carryover_percentage' => ['required', 'numeric', 'min:0', 'max:100']
         ]);
+
+        // Check if a financial year already exists for the tenant
+        $existing = FinancialYear::where('tenant_id', auth()->user()->tenant_id)->first();
+        
+        if ($existing) {
+            return response()->json(['error' => 'A financial year already exists for this tenant. Please update instead.'], 400);
+        }
 
         $financialYear = FinancialYear::create([
             'tenant_id' => auth()->user()->tenant_id,
             'start_date' => $req->start_date,
-            'end_date' => $req->end_date
+            'end_date' => $req->end_date,
+            'carryover_percentage' => $req->carryover_percentage
         ]);
 
         return response()->json([
@@ -232,20 +241,28 @@ class LeaveController extends Controller
         ], 201);
     }
 
-    public function updateFinancialYear(Request $req, $id) {
+    public function updateFinancialYear(Request $req) {
         $validatedData = $req->validate([
             'start_date' => ['required'],
             'end_date' => ['required']
         ]);
 
-        $financialYear = FinancialYear::where('tenant_id', auth()->user()->tenant_id)->findOrFail($id);
-        $financialYear->update($validatedData);
+        $financialYear = FinancialYear::where('tenant_id', auth()->user()->tenant_id)->first();
+
+        if (!$financialYear) {
+            return response()->json(['error' => 'Financial year not found for this tenant'], 404);
+        }
+
+        $financialYear->update([
+            'start_date' => $validatedData['start_date'],
+            'end_date' => $validatedData['end_date']
+        ]);
 
         return response()->json(['message' => 'Financial year updated successfully', 'financial_year' => $financialYear]);
     }
 
-    public function deleteFinancialYear($id) {
-        $financialYear = FinancialYear::where('tenant_id', auth()->user()->tenant_id)->findOrFail($id);
+    public function deleteFinancialYear() {
+        $financialYear = FinancialYear::where('tenant_id', auth()->user()->tenant_id)->first();
         $financialYear->delete();
         return response()->json(['message' => 'Financial year deleted successfully']);
     }

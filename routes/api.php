@@ -82,8 +82,8 @@ Route::prefix('leave')->middleware(['cors','auth:sanctum', 'module.access:Leave 
     // Financial Year Management
     Route::get('/financial-years', [App\Http\Controllers\LeaveController::class, 'getFinancialYears']);
     Route::post('/financial-years', [App\Http\Controllers\LeaveController::class, 'storeFinancialYear']);
-    Route::put('/financial-years/{id}', [App\Http\Controllers\LeaveController::class, 'updateFinancialYear']);
-    Route::delete('/financial-years/{id}', [App\Http\Controllers\LeaveController::class, 'deleteFinancialYear']);
+    Route::put('/financial-years', [App\Http\Controllers\LeaveController::class, 'updateFinancialYear']);
+    Route::delete('/financial-years', [App\Http\Controllers\LeaveController::class, 'deleteFinancialYear']);
 });
 
 Route::fallback(function () {

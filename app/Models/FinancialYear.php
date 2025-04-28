@@ -11,7 +11,7 @@ class FinancialYear extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['tenant_id', 'start_date', 'end_date'];
+    protected $fillable = ['tenant_id', 'start_date', 'end_date','carryover_percentage'];
 
     public function hostname()
     {
