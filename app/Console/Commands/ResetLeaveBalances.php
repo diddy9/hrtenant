@@ -22,11 +22,12 @@ class ResetLeaveBalances extends Command
         $today = Carbon::now();
 
         // Get all tenants
-        $financialYears = FinancialYear::all();
+        $financialYears = $financialYears = FinancialYear::withoutGlobalScopes()->get();
 
         foreach ($financialYears as $fy) {
             // Check if today matches their financial year end date
-            if ($today->format('m-d') === $fy->end_date) {
+            //if ($today->format('m-d') === $fy->end_date) {
+            if (true) {
                 $this->resetTenantLeave($fy->tenant_id);
             }
         }
@@ -34,20 +35,20 @@ class ResetLeaveBalances extends Command
         $this->info('Leave balances reset successfully.');
     }
 
-    public function resetTenantLeave(){
-        $tenantId = auth()->user()->tenant_id;
+    public function resetTenantLeave($tenantId){
 
         // Fetch the tenant's carryover setting
-        $financialYear = FinancialYear::where('tenant_id', $tenantId)->first();
+        $financialYear = FinancialYear::withoutGlobalScopes()->where('tenant_id', $tenantId)->first();
         
         if (!$financialYear) {
-            return response()->json(['error' => 'Financial year settings not found'], 400);
+            $this->error("Financial year settings not found for tenant ID: $tenantId");
+            return;
         }
 
         $carryoverPercentage = $financialYear->carryover_percentage ?? 0; // Default to 0% if not set
 
-        $categories = Leave_Category::all();
-        $users = User::where('tenant_id', $tenantId)->get();
+        $categories = Leave_Category::withoutGlobalScopes()->get();
+        $users = User::withoutGlobalScopes()->where('tenant_id', $tenantId)->get();
 
         foreach ($users as $user) {
             foreach ($categories as $category) {
@@ -67,6 +68,7 @@ class ResetLeaveBalances extends Command
                 // Insert carryover as a new record
                 if ($carryOver > 0) {
                     Leave_Application::create([
+                        'tenant_id' => $tenantId,
                         'user_id' => $user->id,
                         'sid' => null,
                         'reliver_id' => null,

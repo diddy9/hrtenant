@@ -22,8 +22,10 @@ class TenantScope implements Scope
     public function apply(Builder $builder, Model $model)
     {
     	$hostname = app(\Hyn\Tenancy\Environment::class)->hostname();
-    	$tenant_id = $hostname->id;
-        $builder->where('tenant_id', '=', $tenant_id);
+        if($hostname){
+            $tenant_id = $hostname->id;
+            $builder->where('tenant_id', '=', $tenant_id);
+        }
     }
 }
 
