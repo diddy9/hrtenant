@@ -13,7 +13,7 @@ class CreateLeaveApplicationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('leave__applications', function (Blueprint $table) {
+        /*Schema::create('leave__applications', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('sid')->nullable()->constrained('users')->onDelete('set null'); // Supervisor
@@ -29,7 +29,7 @@ class CreateLeaveApplicationsTable extends Migration
 
             // Foreign Key Constraint
             $table->foreign('tenant_id')->references('id')->on('hostnames')->onDelete('cascade');
-        });
+        });*/
     }
 
     /**

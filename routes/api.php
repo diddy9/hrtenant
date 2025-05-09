@@ -86,6 +86,27 @@ Route::prefix('leave')->middleware(['cors','auth:sanctum', 'module.access:Leave 
     Route::delete('/financial-years', [App\Http\Controllers\LeaveController::class, 'deleteFinancialYear']);
 });
 
+Route::prefix('payroll')->middleware(['cors','auth:sanctum', 'module.access:Payroll Management'])->group(function () {
+    //PaySlip Items
+    Route::get('/items/{designation_id}', [App\Http\Controllers\PayrollController::class, 'itemByDesignation']);
+    Route::post('/items', [App\Http\Controllers\PayrollController::class, 'storeItem']);
+    Route::put('/items/{id}', [App\Http\Controllers\PayrollController::class, 'updateItem']);
+    Route::delete('/items/{id}', [App\Http\Controllers\PayrollController::class, 'deleteItem']);
+
+    //Pay Salary
+    Route::get('summary', [App\Http\Controllers\PayrollController::class, 'paySummary']);
+    Route::post('validate', [App\Http\Controllers\PayrollController::class, 'validateSalary']);
+    Route::post('process/{date}', [App\Http\Controllers\PayrollController::class, 'processPayroll']);
+    Route::get('processed/{date}', [App\Http\Controllers\PayrollController::class, 'getProcessedPayroll']);
+    Route::get('view/{id}', [App\Http\Controllers\PayrollController::class, 'viewPayslip']);
+    Route::post('line-item', [App\Http\Controllers\PayrollController::class, 'storePayslipItem']);
+    Route::delete('line-item/{id}', [App\Http\Controllers\PayrollController::class, 'deletePayslipItem']);
+    Route::post('pay/{date}', [App\Http\Controllers\PayrollController::class, 'paySalary']);
+    Route::get('export/{date}', [App\Http\Controllers\PayrollController::class, 'exportSchedule']);
+});
+
+
+
 Route::fallback(function () {
     return response()->json([
         'status' => false,

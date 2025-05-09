@@ -26,8 +26,7 @@ class ResetLeaveBalances extends Command
 
         foreach ($financialYears as $fy) {
             // Check if today matches their financial year end date
-            //if ($today->format('m-d') === $fy->end_date) {
-            if (true) {
+            if ($today->format('m-d') === $fy->end_date) {
                 $this->resetTenantLeave($fy->tenant_id);
             }
         }
